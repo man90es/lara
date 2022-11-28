@@ -54,8 +54,8 @@ def download_latest_artefact(token, user, repo, dest=None):
 		zipfile.ZipFile(dest)
 		print(f"{dest} successfully downloaded")
 	except zipfile.BadZipFile:
-		print("Please check the correctness of provided token")
 		os.remove(dest)
+		sys.exit("Please check the correctness of provided token")
 
 
 user, repo, dest = parse_args()
