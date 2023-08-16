@@ -26,9 +26,12 @@ def parse_env():
 
 
 def download_latest_artefact(token, user, repo, dest=None):
+	# Apply auth token to requests
+	auth = requests.auth.HTTPBasicAuth("token", token)
+
 	# Get a link for all artefacts
 	artefacts_uri = f"https://api.github.com/repos/{user}/{repo}/actions/artifacts"
-	artefacts = requests.get(artefacts_uri).json()
+	artefacts = requests.get(artefacts_uri, auth=auth).json()
 
 	# Crash if there is no repository or no artefacts
 	try:
@@ -39,7 +42,7 @@ def download_latest_artefact(token, user, repo, dest=None):
 
 	# Request the latest artefact
 	file_uri = artefacts["artifacts"][0]["archive_download_url"]
-	zip_res = requests.get(file_uri, auth=requests.auth.HTTPBasicAuth("token", token))
+	zip_res = requests.get(file_uri, auth=auth)
 
 	# Use the filename used for the artefact on GH as the default path
 	if dest is None:
